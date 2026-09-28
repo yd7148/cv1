@@ -1,0 +1,24 @@
+---
+import { useT, type Locale } from "../lib/i18n";
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props as Props;
+const t = useT(locale);
+---
+
+<section class="border-b border-[var(--color-line)] bg-[var(--color-surface)]">
+  <div class="container-x grid grid-cols-2 lg:grid-cols-4 divide-x divide-[var(--color-line)] py-2">
+    {
+      t.stats.map((s) => (
+        <div class="px-4 py-6 text-center lg:text-left">
+          <p class="text-3xl font-extrabold tabular-nums">
+            {s.value}
+            <span class="text-base font-semibold text-[var(--color-muted)] ml-1">{s.unit}</span>
+          </p>
+          <p class="mt-1 text-[13px] text-[var(--color-muted)] leading-snug">{s.label}</p>
+        </div>
+      ))
+    }
+  </div>
+</section>

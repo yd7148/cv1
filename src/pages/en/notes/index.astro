@@ -1,0 +1,46 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../../../layouts/Base.astro";
+import { useT } from "../../../lib/i18n";
+import { identity } from "../../../data/resume";
+
+const locale = "en" as const;
+const t = useT(locale);
+const all = (await getCollection("notes", (n) => n.data.lang === locale && !n.data.draft)).sort(
+  (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime()
+);
+---
+
+<Base
+  locale={locale}
+  title={`Technical notes | ${identity.name.en}`}
+  description="Notes from the factory floor and from deploying AI in production."
+>
+  <div class="container-x py-12 sm:py-16 max-w-3xl">
+    <h1 class="text-3xl sm:text-4xl font-extrabold">📓 {t.sections.notes}</h1>
+    <p class="mt-2 text-[var(--color-muted)]">Notes from the factory floor and from deploying AI in production.</p>
+    <div class="mt-8 space-y-3">
+      {
+        all.map((n) => (
+          <a
+            href={`/${locale}/notes/${n.id.replace(/-(zh|en)$/, "")}/`}
+            class="card p-5 block hover:border-[var(--color-brand)] transition-colors"
+          >
+            <div class="flex flex-wrap items-baseline justify-between gap-2">
+              <h2 class="font-bold leading-snug">{n.data.title}</h2>
+              <time class="text-xs tabular-nums text-[var(--color-muted)] shrink-0">
+                {n.data.pubDate.toISOString().slice(0, 10)}
+              </time>
+            </div>
+            <p class="mt-1.5 text-sm text-[var(--color-muted)] leading-relaxed">
+              {n.data.description}
+            </p>
+            <div class="mt-2.5 flex flex-wrap gap-1.5">
+              {n.data.tags.map((x) => <span class="chip text-[11px] py-0.5 px-2">{x}</span>)}
+            </div>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</Base>

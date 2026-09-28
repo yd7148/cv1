@@ -1,0 +1,194 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "Inter", "Noto Sans TC", system-ui, -apple-system, "Segoe UI",
+    "PingFang TC", "Microsoft JhengHei", sans-serif;
+  --font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+
+  --color-bg: #ffffff;
+  --color-fg: #0f172a;
+  --color-muted: #64748b;
+  --color-line: #e2e8f0;
+  --color-surface: #f8fafc;
+  --color-brand: #0f766e;
+  --color-brand-fg: #ffffff;
+  --color-accent: #b45309;
+}
+
+.dark {
+  --color-bg: #0b1120;
+  --color-fg: #e2e8f0;
+  --color-muted: #94a3b8;
+  --color-line: #1e293b;
+  --color-surface: #111c33;
+  --color-brand: #2dd4bf;
+  --color-brand-fg: #04211d;
+  --color-accent: #fbbf24;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    color-scheme: light;
+  }
+  html.dark {
+    color-scheme: dark;
+  }
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+  a {
+    color: inherit;
+  }
+}
+
+@layer components {
+  .container-x {
+    margin-inline: auto;
+    width: 100%;
+    max-width: 72rem;
+    padding-inline: 1.25rem;
+  }
+  .card {
+    border: 1px solid var(--color-line);
+    border-radius: 0.9rem;
+    background-color: var(--color-bg);
+  }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    border: 1px solid var(--color-line);
+    border-radius: 999px;
+    padding: 0.3rem 0.75rem;
+    font-size: 0.8125rem;
+    line-height: 1.2;
+    background-color: var(--color-surface);
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    border-radius: 0.6rem;
+    padding: 0.7rem 1.15rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    border: 1px solid var(--color-line);
+    background-color: var(--color-bg);
+    transition: background-color 0.15s, border-color 0.15s, transform 0.15s;
+  }
+  .btn:hover {
+    background-color: var(--color-surface);
+    transform: translateY(-1px);
+  }
+  .btn-primary {
+    background-color: var(--color-brand);
+    color: var(--color-brand-fg);
+    border-color: var(--color-brand);
+  }
+  .btn-primary:hover {
+    background-color: var(--color-brand);
+    filter: brightness(1.08);
+  }
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    margin-bottom: 1.1rem;
+  }
+  .section-title::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background-color: var(--color-line);
+  }
+  .link-underline {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: var(--color-line);
+  }
+  .link-underline:hover {
+    text-decoration-color: currentColor;
+  }
+}
+
+/* ── 個資遮罩：螢幕上遮住，列印時自動解除 ───────────────── */
+.pii {
+  background-color: currentColor;
+  color: transparent !important;
+  border-radius: 3px;
+  padding-inline: 0.15em;
+  user-select: none;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+.pii.is-revealed {
+  background-color: transparent;
+  color: inherit !important;
+  user-select: auto;
+  cursor: auto;
+}
+
+/* ── 語言切換列印時自動隱藏 ───────────────── */
+@media print {
+  html,
+  html.dark {
+    color-scheme: light;
+    --color-bg: #ffffff;
+    --color-fg: #000000;
+    --color-muted: #444444;
+    --color-line: #cccccc;
+    --color-surface: #ffffff;
+    --color-brand: #000000;
+    --color-brand-fg: #ffffff;
+    --color-accent: #000000;
+    background: #fff !important;
+  }
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+  .print-hide {
+    display: none !important;
+  }
+  .pii {
+    background-color: transparent !important;
+    color: inherit !important;
+    user-select: auto;
+  }
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.72em;
+    color: #555;
+  }
+  a[href^="mailto"]::after,
+  a[href^="tel"]::after {
+    content: none;
+  }
+  h1,
+  h2,
+  h3,
+  .avoid-break {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  h1,
+  h2 {
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+}

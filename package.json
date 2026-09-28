@@ -1,0 +1,33 @@
+{
+  "name": "yd7148",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build && node scripts/fix-base.mjs",
+    "preview": "astro preview",
+    "check": "astro check",
+    "sync": "astro sync",
+    "astro": "astro",
+    "verify:build": "node scripts/verify-build.mjs",
+    "deploy": "npm run build && npm run verify:build && gh workflow run deploy.yml"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.3",
+    "astro": "^7.0.3",
+    "sharp": "^0.35.2"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.9",
+    "@tailwindcss/vite": "^4.3.2",
+    "tailwindcss": "^4.3.2",
+    "typescript": "^5.9.0"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true
+  }
+}

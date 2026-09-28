@@ -1,0 +1,18 @@
+---
+import Base from "../../layouts/Base.astro";
+import { identity } from "../../data/resume";
+const locale = "zh" as const;
+---
+
+<Base locale={locale} title={`找不到頁面｜${identity.name.zh}`} description="404" noindex>
+  <div class="container-x py-24 sm:py-32 text-center max-w-xl">
+    <p class="text-6xl" aria-hidden="true">🧭</p>
+    <h1 class="mt-4 text-3xl font-extrabold">找不到這個頁面</h1>
+    <p class="mt-3 text-[var(--color-muted)]">連結可能已經變更，或頁面不存在。</p>
+    <div class="mt-8 flex flex-wrap justify-center gap-3">
+      <a href={`/${locale}/`} class="btn btn-primary">&larr; 回首頁</a>
+      <a href={`/${locale}/works/`} class="btn">看作品集</a>
+      <a href={`/${locale}/contact/`} class="btn">聯絡我</a>
+    </div>
+  </div>
+</Base>

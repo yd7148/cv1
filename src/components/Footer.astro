@@ -1,0 +1,22 @@
+---
+import { useT } from "../lib/i18n";
+const { locale } = Astro.props;
+const t = useT(locale);
+const y = new Date().getFullYear();
+---
+
+<footer class="print-hide border-t border-[var(--color-line)] mt-20">
+  <div class="container-x py-10 text-sm text-[var(--color-muted)]">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <p>
+        <span class="font-semibold text-[var(--color-fg)]">劉士禎 / Shih-Chen Liu</span>
+        <span class="mx-2">·</span>
+        {t.hero.kicker}
+      </p>
+      <p class="text-xs">{t.foot.rights} {y}</p>
+    </div>
+    <p class="text-xs mt-4 pt-4 border-t border-[var(--color-line)]">
+      {t.foot.built}
+    </p>
+  </div>
+</footer>

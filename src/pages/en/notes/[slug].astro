@@ -1,0 +1,48 @@
+---
+import { getCollection, render } from "astro:content";
+import Base from "../../../layouts/Base.astro";
+import { useT, altPath } from "../../../lib/i18n";
+import { identity } from "../../../data/resume";
+
+export async function getStaticPaths() {
+  const all = await getCollection("notes", (n) => n.data.lang === "en" && !n.data.draft);
+  return all.map((n) => ({ params: { slug: n.id.replace(/-(zh|en)$/, "") }, props: { entry: n } }));
+}
+
+const { entry } = Astro.props;
+const d = entry.data;
+const locale = "en" as const;
+const t = useT(locale);
+const { Content } = await render(entry);
+---
+
+<Base locale={locale} title={`${d.title} | ${identity.name.en}`} description={d.description}>
+  <article class="container-x py-12 sm:py-16 max-w-3xl">
+    <a
+      href={`/${locale}/notes/`}
+      class="text-sm text-[var(--color-muted)] hover:text-[var(--color-brand)] print-hide"
+      >&larr; {t.nav.notes}</a
+    >
+    <header class="mt-4">
+      <h1 class="text-3xl sm:text-4xl font-extrabold leading-tight">{d.title}</h1>
+      <p class="mt-2 text-sm text-[var(--color-muted)]">
+        <time class="tabular-nums">{d.pubDate.toISOString().slice(0, 10)}</time>
+      </p>
+      <p class="mt-3 text-[15px] text-[var(--color-muted)]">{d.description}</p>
+      <div class="mt-3 flex flex-wrap gap-1.5">
+        {d.tags.map((x) => <span class="chip text-xs">{x}</span>)}
+      </div>
+      <a
+        href={altPath(Astro.url.pathname, "zh")}
+        hreflang="zh-Hant-TW"
+        class="print-hide mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--color-brand)] link-underline"
+        >🌐 改用繁體中文閱讀</a
+      >
+    </header>
+    <div
+      class="mt-8 leading-relaxed [&_h2]:font-bold [&_h2]:text-xl [&_h2]:mt-8 [&_h2]:mb-2 [&_p]:mt-3 [&_ul]:mt-3 [&_ul]:pl-5 [&_li]:my-1 [&_table]:w-full [&_table]:mt-4 [&_table]:text-sm [&_th]:text-left [&_th]:border [&_th]:border-[var(--color-line)] [&_th]:px-2 [&_th]:py-1.5 [&_td]:border [&_td]:border-[var(--color-line)] [&_td]:px-2 [&_td]:py-1.5 [&_blockquote]:border-l-4 [&_blockquote]:border-[var(--color-brand)] [&_blockquote]:pl-4 [&_blockquote]:my-4 [&_blockquote]:text-[var(--color-muted)] [&_strong]:font-semibold [&_code]:rounded [&_code]:bg-[var(--color-surface)] [&_code]:px-1 [&_code]:py-0.5 [&_code]:text-[0.9em]"
+    >
+      <Content />
+    </div>
+  </article>
+</Base>

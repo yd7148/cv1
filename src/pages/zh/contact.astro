@@ -1,0 +1,92 @@
+---
+import Base from "../../layouts/Base.astro";
+import { useT } from "../../lib/i18n";
+import { identity } from "../../data/resume";
+
+const locale = "zh" as const;
+const t = useT(locale);
+// TODO: 到 web3forms.com 用 使用 .env 的 PUBLIC_EMAIL 申請 access key
+const WEB3FORMS_KEY = "TODO_WEB3FORMS_ACCESS_KEY";
+---
+
+<Base
+  locale={locale}
+  title={`聯絡我｜${identity.name.zh}`}
+  description="填寫表單與劉士禎聯繫。網站刻意不公開電話與信箱。"
+>
+  <div class="container-x py-12 sm:py-16 max-w-2xl">
+    <h1 class="text-3xl sm:text-4xl font-extrabold">✉️ {t.contact.title}</h1>
+    <p class="mt-3 text-[15px] leading-relaxed text-[var(--color-muted)]">{t.contact.lead}</p>
+
+    <form class="mt-8 card p-6 space-y-4" action="https://api.web3forms.com/submit" method="POST">
+      <input type="hidden" name="access_key" value={WEB3FORMS_KEY} />
+      <input type="hidden" name="from_name" value={identity.name.zh} />
+      <input type="hidden" name="subject" value="個人網站聯絡表單" />
+      <input type="hidden" name="redirect" value="https://yd7148.workers.dev/zh/contact/?sent=1" />
+      <input type="text" name="_gotcha" class="hidden" tabindex="-1" autocomplete="off" />
+
+      <label class="block">
+        <span class="text-sm font-semibold">{t.contact.name} *</span>
+        <input
+          required
+          name="name"
+          type="text"
+          class="mt-1.5 w-full rounded-lg border border-[var(--color-line)] bg-[var(--color-bg)] px-3.5 py-2.5 text-sm"
+        />
+      </label>
+
+      <label class="block">
+        <span class="text-sm font-semibold">{t.contact.company}</span>
+        <input
+          name="company"
+          type="text"
+          class="mt-1.5 w-full rounded-lg border border-[var(--color-line)] bg-[var(--color-bg)] px-3.5 py-2.5 text-sm"
+        />
+      </label>
+
+      <label class="block">
+        <span class="text-sm font-semibold">{t.contact.role}</span>
+        <input
+          name="position"
+          type="text"
+          class="mt-1.5 w-full rounded-lg border border-[var(--color-line)] bg-[var(--color-bg)] px-3.5 py-2.5 text-sm"
+        />
+      </label>
+
+      <label class="block">
+        <span class="text-sm font-semibold">{t.contact.reason}</span>
+        <select
+          name="topic"
+          class="mt-1.5 w-full rounded-lg border border-[var(--color-line)] bg-[var(--color-bg)] px-3.5 py-2.5 text-sm"
+        >
+          <option>想進一步了解我的背景與能力</option>
+          <option>想討論工作機會 / 面試邀約</option>
+          <option>想索取履歷 PDF</option>
+          <option>SiC 半導體 / 智慧製造相關技術交流</option>
+          <option>其他</option>
+        </select>
+      </label>
+
+      <label class="block">
+        <span class="text-sm font-semibold">{t.contact.message} *</span>
+        <textarea
+          required
+          name="message"
+          rows="5"
+          class="mt-1.5 w-full rounded-lg border border-[var(--color-line)] bg-[var(--color-bg)] px-3.5 py-2.5 text-sm"
+        ></textarea>
+      </label>
+
+      <button type="submit" class="btn btn-primary w-full">📨 {t.contact.submit}</button>
+      <p class="text-xs text-[var(--color-muted)]">🔒 {t.contact.privacy}</p>
+    </form>
+
+    <div class="mt-8 p-4 rounded-xl border border-[var(--color-line)] bg-[var(--color-surface)] text-sm">
+      <p class="font-semibold">📄 想要履歷 PDF？</p>
+      <p class="mt-1.5 text-[var(--color-muted)]">
+        直接到 <a href={`/${locale}/resume/`} class="text-[var(--color-brand)] link-underline">A4 列印版</a>
+        按「列印 / 存成 PDF」即可取得。
+      </p>
+    </div>
+  </div>
+</Base>

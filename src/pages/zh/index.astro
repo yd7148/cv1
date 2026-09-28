@@ -1,0 +1,80 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import Hero from "../../components/Hero.astro";
+import Stats from "../../components/Stats.astro";
+import Why from "../../components/Why.astro";
+import WorkGrid from "../../components/WorkGrid.astro";
+import ExperienceSections from "../../components/ExperienceSections.astro";
+import { useT } from "../../lib/i18n";
+import { identity } from "../../data/resume";
+
+const locale = "zh" as const;
+const t = useT(locale);
+const works = (await getCollection("works", (w) => w.data.lang === locale && w.data.featured)).sort(
+  (a, b) => a.data.order - b.data.order
+);
+const notes = (await getCollection("notes", (n) => n.data.lang === locale && !n.data.draft)).sort(
+  (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime()
+);
+---
+
+<Base
+  locale={locale}
+  title={`${identity.name.zh} · ${identity.kicker.zh}｜${identity.currentTitle.zh}`}
+  description={identity.summary.zh}
+>
+  <Hero locale={locale} />
+  <Stats locale={locale} />
+  <Why locale={locale} />
+
+  <section class="border-b border-[var(--color-line)]">
+    <div class="container-x py-12 sm:py-16">
+      <h2 class="section-title">🧩 {t.sections.works}</h2>
+      <WorkGrid locale={locale} works={works} />
+      <div class="mt-6 print-hide">
+        <a href={`/${locale}/works/`} class="btn">{t.nav.works} &rarr;</a>
+      </div>
+    </div>
+  </section>
+
+  <ExperienceSections locale={locale} />
+
+  {
+    notes.length > 0 && (
+      <section class="border-b border-[var(--color-line)]">
+        <div class="container-x py-12 sm:py-16">
+          <h2 class="section-title">📓 {t.sections.notes}</h2>
+          <div class="space-y-3">
+            {notes.slice(0, 3).map((n) => (
+              <a
+                href={`/${locale}/notes/${n.id.replace(/-(zh|en)$/, "")}/`}
+                class="card p-4 block hover:border-[var(--color-brand)] transition-colors"
+              >
+                <div class="flex flex-wrap items-baseline justify-between gap-2">
+                  <h3 class="font-semibold">{n.data.title}</h3>
+                  <time class="text-xs tabular-nums text-[var(--color-muted)]">
+                    {n.data.pubDate.toISOString().slice(0, 10)}
+                  </time>
+                </div>
+                <p class="mt-1 text-sm text-[var(--color-muted)] leading-relaxed">
+                  {n.data.description}
+                </p>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <section class="print-hide">
+    <div class="container-x py-12 sm:py-16 text-center">
+      <p class="text-lg text-[var(--color-muted)] max-w-2xl mx-auto">{t.hero.lead}</p>
+      <div class="mt-6 flex flex-wrap justify-center gap-3">
+        <a href={`/${locale}/resume/`} class="btn btn-primary">📄 {t.hero.ctaResume}</a>
+        <a href={`/${locale}/contact/`} class="btn">✉️ {t.hero.ctaContact}</a>
+      </div>
+    </div>
+  </section>
+</Base>
