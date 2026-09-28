@@ -38,6 +38,9 @@ function countAttrs(html) {
 }
 
 const ATTR = /\s(href|src|action|poster|data-src)="(\/[^"]*)"/g;
+// <meta http-equiv="refresh" content="0;url=/zh/">：Astro 靜態輸出時把 302 轉成 meta refresh，
+// 這裡的目標網址也要加 base，否則從 /<repo>/ 進來會被轉到根目錄。
+const META_REFRESH = /(http-equiv="refresh" content="[^"]*url=)(\/[^";]*)/g;
 
 function fixHtml(html) {
   return html.replace(ATTR, (whole, attr, url) => {
@@ -45,6 +48,12 @@ function fixHtml(html) {
     if (url.startsWith("//")) return whole; // protocol-relative
     return ` ${attr}="${base + url.slice(1)}"`;
   });
+}
+
+function fixMetaRefresh(html) {
+  return html.replace(META_REFRESH, (whole, head, url) =>
+    alreadyPrefixed(url) ? whole : head + base + url.slice(1)
+  );
 }
 
 let touched = 0;
@@ -57,7 +66,7 @@ function walk(dir) {
       walk(f);
     } else if (e.name.endsWith(".html")) {
       const before = fs.readFileSync(f, "utf8");
-      const after = fixHtml(before);
+      const after = fixMetaRefresh(fixHtml(before));
       if (after !== before) {
         urls += countAttrs(before);
         fs.writeFileSync(f, after, "utf8");
