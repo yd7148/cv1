@@ -1,0 +1,94 @@
+name: Deploy to GitHub Pages
+
+# push 到 main 就自動重新部署，不用再手動跑 npm run deploy。
+# 個人資料不在這裡 —— 它從 repository secrets 讀進 .env，.env 本身不進版控。
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 同時只允許一個部署，後來的排隊而不是互相覆蓋
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: 檢查個人資料 secrets 是否都已設定
+        env:
+          PUBLIC_BIRTH: ${{ secrets.PUBLIC_BIRTH }}
+          PUBLIC_MOBILE: ${{ secrets.PUBLIC_MOBILE }}
+          PUBLIC_EMAIL: ${{ secrets.PUBLIC_EMAIL }}
+          PUBLIC_EMAIL_WORK: ${{ secrets.PUBLIC_EMAIL_WORK }}
+          PUBLIC_TEL_OFFICE: ${{ secrets.PUBLIC_TEL_OFFICE }}
+          PUBLIC_ADDRESS_ZH: ${{ secrets.PUBLIC_ADDRESS_ZH }}
+          PUBLIC_ADDRESS_EN: ${{ secrets.PUBLIC_ADDRESS_EN }}
+        run: |
+          missing=0
+          for k in PUBLIC_BIRTH PUBLIC_MOBILE PUBLIC_EMAIL PUBLIC_EMAIL_WORK \
+                   PUBLIC_TEL_OFFICE PUBLIC_ADDRESS_ZH PUBLIC_ADDRESS_EN; do
+            if [ -z "${!k}" ]; then
+              echo "::error::缺少 repository secret：$k"
+              missing=1
+            fi
+          done
+          # 寧可部署失敗，也不要把一個「個資欄位全空白」的履歷頁送出去。
+          [ "$missing" -eq 0 ] || exit 1
+
+      - name: 產生 .env（只在 runner 上存在，不進版控、不進 artifact）
+        env:
+          PUBLIC_BIRTH: ${{ secrets.PUBLIC_BIRTH }}
+          PUBLIC_MOBILE: ${{ secrets.PUBLIC_MOBILE }}
+          PUBLIC_EMAIL: ${{ secrets.PUBLIC_EMAIL }}
+          PUBLIC_EMAIL_WORK: ${{ secrets.PUBLIC_EMAIL_WORK }}
+          PUBLIC_TEL_OFFICE: ${{ secrets.PUBLIC_TEL_OFFICE }}
+          PUBLIC_ADDRESS_ZH: ${{ secrets.PUBLIC_ADDRESS_ZH }}
+          PUBLIC_ADDRESS_EN: ${{ secrets.PUBLIC_ADDRESS_EN }}
+        run: |
+          touch .env
+          for k in PUBLIC_BIRTH PUBLIC_MOBILE PUBLIC_EMAIL PUBLIC_EMAIL_WORK \
+                   PUBLIC_TEL_OFFICE PUBLIC_ADDRESS_ZH PUBLIC_ADDRESS_EN; do
+            printf '%s=%s\n' "$k" "${!k}" >> .env
+          done
+
+      - name: Build
+        run: npm run build
+
+      - name: 隱私閘關：公開頁不得含個資
+        run: npm run verify:build
+
+      - name: 移除 .env
+        run: rm -f .env
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
