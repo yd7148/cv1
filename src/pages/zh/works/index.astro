@@ -1,0 +1,29 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../../../layouts/Base.astro";
+import WorkGrid from "../../../components/WorkGrid.astro";
+import { useT } from "../../../lib/i18n";
+import { identity } from "../../../data/resume";
+
+const locale = "zh" as const;
+const t = useT(locale);
+const works = (await getCollection("works", (w) => w.data.lang === locale)).sort(
+  (a, b) => a.data.order - b.data.order
+);
+---
+
+<Base
+  locale={locale}
+  title={`作品集｜${identity.name.zh}`}
+  description="SiC 晶圓缺陷檢測、SiC 試驗工廠建立、邊緣 AI 部署 —— 以「問題 → 做法 → 成果」呈現的專案。"
+>
+  <div class="container-x py-12 sm:py-16">
+    <h1 class="text-3xl sm:text-4xl font-extrabold">🧩 {t.sections.works}</h1>
+    <p class="mt-2 text-[var(--color-muted)] max-w-2xl">
+      以「問題 → 做法 → 成果」呈現。標示為 <span class="text-[var(--color-accent)]">✏️ TODO</span> 的項目代表還缺量化數字，補上後會更有說服力。
+    </p>
+    <div class="mt-8">
+      <WorkGrid locale={locale} works={works} />
+    </div>
+  </div>
+</Base>

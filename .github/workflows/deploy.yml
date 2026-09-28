@@ -1,0 +1,54 @@
+name: Deploy to GitHub Pages
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: 產生 .env（個資來自 repository secrets，不進版控）
+        env:
+          PUBLIC_BIRTH: ${{ secrets.PUBLIC_BIRTH }}
+          PUBLIC_MOBILE: ${{ secrets.PUBLIC_MOBILE }}
+          PUBLIC_EMAIL: ${{ secrets.PUBLIC_EMAIL }}
+          PUBLIC_EMAIL_WORK: ${{ secrets.PUBLIC_EMAIL_WORK }}
+          PUBLIC_TEL_OFFICE: ${{ secrets.PUBLIC_TEL_OFFICE }}
+          PUBLIC_ADDRESS_ZH: ${{ secrets.PUBLIC_ADDRESS_ZH }}
+          PUBLIC_ADDRESS_EN: ${{ secrets.PUBLIC_ADDRESS_EN }}
+        run: |
+          touch .env
+          for k in PUBLIC_BIRTH PUBLIC_MOBILE PUBLIC_EMAIL PUBLIC_EMAIL_WORK \
+                   PUBLIC_TEL_OFFICE PUBLIC_ADDRESS_ZH PUBLIC_ADDRESS_EN; do
+            printf '%s=%s\n' "$k" "${!k}" >> .env
+          done
+          # .env 只給建置用，不要留在 runner 上被上傳成 artifact
+          echo ".env" >> .gitignore
+
+      - name: Build
+        run: npm run build
+
+      - name: 檢查公開頁面沒有洩漏個資
+        run: node verify-build.mjs
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

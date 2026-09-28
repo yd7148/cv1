@@ -1,0 +1,213 @@
+---
+import { useT, altPath, type Locale } from "../lib/i18n";
+import { identity, experience, education, certifications, keywords } from "../data/resume";
+import { contact } from "../data/contact";
+import Pii from "../components/Pii.astro";
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useT(locale);
+const other = locale === "zh" ? "en" : "zh";
+---
+
+<!doctype html>
+<html lang={locale === "zh" ? "zh-Hant-TW" : "en"}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{identity.name[locale]} — 履歷 Résumé</title>
+    <meta name="robots" content="noindex, nofollow, noarchive" />
+    <meta name="referrer" content="no-referrer" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap"
+    />
+    <style is:global>
+      :root { color-scheme: light; }
+      * { box-sizing: border-box; }
+      html, body { margin:0; padding:0; background:#eef2f7; color:#14181f;
+        font-family:"Inter","Noto Sans TC",system-ui,-apple-system,"Segoe UI","PingFang TC","Microsoft JhengHei",sans-serif; }
+      .sheet { max-width:210mm; margin:24px auto; background:#fff; padding:14mm 15mm;
+        box-shadow:0 8px 40px rgba(15,23,42,.14); font-size:10.4pt; line-height:1.52; }
+      .bar { position:sticky; top:0; z-index:9; background:#0f766e; color:#fff; padding:10px 16px;
+        display:flex; gap:10px; align-items:center; justify-content:center; flex-wrap:wrap;
+        font:600 14px/1.4 "Inter","Noto Sans TC",system-ui,sans-serif; }
+      .bar a, .bar button { color:#fff; background:transparent; border:1px solid rgba(255,255,255,.55);
+        border-radius:6px; padding:6px 12px; font:inherit; cursor:pointer; text-decoration:none; }
+      .bar a:hover, .bar button:hover { background:rgba(255,255,255,.16); }
+      h1 { font-size:21pt; margin:0; letter-spacing:-.01em; }
+      h1 small { display:block; font-size:11pt; font-weight:500; color:#55606f; margin-top:2px; }
+      .head { display:flex; gap:16px; justify-content:space-between; align-items:flex-start;
+        border-bottom:2px solid #0f766e; padding-bottom:9px; }
+      .role { font-size:11.5pt; font-weight:700; color:#0f766e; margin:4px 0 0; }
+      .contact { font-size:9.2pt; color:#2b313a; text-align:right; line-height:1.65; }
+      .lead { margin:11px 0 3px; font-size:10.8pt; font-weight:600; }
+      .note { margin:6px 0 0; font-size:8.4pt; color:#6b7280; }
+      h2 { font-size:10.6pt; margin:14px 0 6px; padding-bottom:3px; border-bottom:1px solid #d7dde5; letter-spacing:.02em; }
+      h3 { font-size:10.2pt; margin:9px 0 2px; }
+      .when { float:right; font-variant-numeric:tabular-nums; font-size:9pt; color:#55606f; font-weight:500; }
+      .sub { font-size:9.2pt; color:#4a5260; margin:0 0 2px; }
+      ul { margin:3px 0 0; padding-left:15px; }
+      li { margin:1.5px 0; }
+      .tagset span { display:inline-block; border:1px solid #cfd6e0; border-radius:3px;
+        padding:1px 6px; margin:0 3px 3px 0; font-size:8.6pt; color:#2b313a; }
+      .certs { font-size:9.2pt; }
+      .certs div { break-inside:avoid; margin-bottom:3px; }
+      .pii { background:#14181f; color:transparent !important; border-radius:2px; padding:0 2px; }
+      .pii.is-revealed { background:transparent; color:inherit !important; }
+      .avoid, h1, h2, h3 { break-inside:avoid; page-break-inside:avoid; }
+      h2 { break-after:avoid; page-break-after:avoid; }
+      @page { size:A4; margin:10mm 11mm; }
+      @media print {
+        html, body { background:#fff !important; }
+        .bar { display:none !important; }
+        .sheet { max-width:none; margin:0; padding:0; box-shadow:none;
+          font-size:9.1pt; line-height:1.42; }
+        h1 { font-size:18pt; }
+        h1 small { font-size:9.6pt; }
+        .role { font-size:10.4pt; margin-top:3px; }
+        .lead { margin:8px 0 2px; font-size:9.8pt; }
+        h2 { margin:9px 0 4px; font-size:9.8pt; }
+        h3 { margin:6px 0 1px; font-size:9.4pt; }
+        .when { font-size:8.4pt; }
+        .sub { font-size:8.5pt; }
+        .contact { font-size:8.5pt; line-height:1.5; }
+        ul { margin:2px 0 0; padding-left:13px; }
+        li { margin:0.5px 0; }
+        .tagset span { font-size:8pt; padding:0 5px; margin-bottom:2px; }
+        .certs { font-size:8.5pt; }
+        .certs div { margin-bottom:1.5px; }
+        .pii { background:transparent !important; color:inherit !important; }
+        a { text-decoration:none; color:inherit; }
+        .cols { columns:2; column-gap:12px; }
+        .noprint { display:none !important; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="bar noprint">
+      <button id="reveal" data-reveal>{t.resume.reveal}</button>
+      <button id="doPrint">🖨 {t.resume.print}</button>
+      <a href={altPath(Astro.url.pathname, other)} hreflang={other}
+        >🌐 {locale === "zh" ? "English" : "繁體中文"}</a
+      >
+      <a href={`/${locale}/`}>&larr; {t.common.backHome}</a>
+    </div>
+
+    <main class="sheet">
+      <div class="head">
+        <div>
+          <h1>
+            {identity.name[locale]}
+            <small>{locale === "zh" ? "Shih-Chen Liu · Silver Liu" : "劉士禎"}</small>
+          </h1>
+          <p class="role">{identity.currentTitle[locale]}</p>
+          <p class="sub">{identity.kicker[locale]}</p>
+        </div>
+        <div class="contact">
+          <div>📱 <Pii value={contact.mobile} /></div>
+          <div>✉️ <Pii value={contact.email} /></div>
+          <div>☎️ <Pii value={contact.telOffice} /></div>
+          <div>🏢 <Pii value={contact.company.zh} /></div>
+          <div>📍 <Pii value={contact.addressFull[locale]} /></div>
+        </div>
+      </div>
+
+      <p class="lead">{identity.lead[locale]}</p>
+      <p class="sub">{identity.body[locale]}</p>
+      <p class="note">※ {t.resume.notice}</p>
+
+      <h2>{locale === "zh" ? "核心能力關鍵字" : "Core Competencies"}</h2>
+      <div class="tagset">
+        {keywords[locale].map((k) => <span>{k}</span>)}
+      </div>
+
+      <h2>{locale === "zh" ? "工作經歷" : "Professional Experience"}</h2>
+      {
+        experience.map((e) => (
+          <div class="avoid">
+            <h3>
+              <span class="when">{e.period}</span>
+              {e.company[locale]}
+            </h3>
+            <p class="sub">
+              {e.title[locale]} · {e.dept[locale]} · {e.location[locale]}
+            </p>
+            <ul>
+              {e.bullets.map((b) => (
+                <li>{b[locale]}</li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+
+      <h2>{locale === "zh" ? "學歷" : "Education"}</h2>
+      {
+        education.map((e) => (
+          <div class="avoid">
+            <h3>
+              <span class="when">{e.period}</span>
+              {e.school[locale]}
+            </h3>
+            <p class="sub">{e.degree[locale]}</p>
+            {e.thesis && (
+              <p class="sub">
+                {locale === "zh" ? "碩士論文" : "Master's thesis"}: {e.thesis.title[locale]}
+                <br />
+                {e.thesis.advisor[locale]} · {e.thesis.oral[locale]}
+                <br />
+                {e.thesis.url}
+              </p>
+            )}
+          </div>
+        ))
+      }
+
+      <div class="cols">
+        <h2>{locale === "zh" ? "證照與進修" : "Certifications"}</h2>
+        <div class="certs">
+          {
+            certifications.map((c) => (
+              <div>
+                {c.name[locale]}
+                {c.date && <span class="sub"> · {c.date}</span>}
+              </div>
+            ))
+          }
+        </div>
+
+        <h2>{locale === "zh" ? "語言與其他" : "Language & Extras"}</h2>
+        <p class="sub">
+          {locale === "zh" ? "語言能力" : "Language"}: TOEIC 825 (2018)
+          <br />
+          {locale === "zh" ? "可到崗地點" : "Location"}: {contact.availability[locale]}
+        </p>
+      </div>
+    </main>
+
+    <script is:inline>
+      function revealAll() {
+        document.querySelectorAll("[data-pii]").forEach(function (el) {
+          el.classList.add("is-revealed");
+          el.removeAttribute("title");
+        });
+        try { sessionStorage.setItem("pii-revealed", "1"); } catch (e) {}
+      }
+      try { if (sessionStorage.getItem("pii-revealed")) revealAll(); } catch (e) {}
+      var rv = document.getElementById("reveal");
+      if (rv) rv.addEventListener("click", revealAll);
+      var dp = document.getElementById("doPrint");
+      if (dp)
+        dp.addEventListener("click", function () {
+          revealAll();
+          setTimeout(function () { window.print(); }, 150);
+        });
+    </script>
+  </body>
+</html>

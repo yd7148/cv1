@@ -1,0 +1,30 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../../../layouts/Base.astro";
+import WorkGrid from "../../../components/WorkGrid.astro";
+import { useT } from "../../../lib/i18n";
+import { identity } from "../../../data/resume";
+
+const locale = "en" as const;
+const t = useT(locale);
+const works = (await getCollection("works", (w) => w.data.lang === locale)).sort(
+  (a, b) => a.data.order - b.data.order
+);
+---
+
+<Base
+  locale={locale}
+  title={`Projects | ${identity.name.en}`}
+  description="SiC wafer defect detection, SiC pilot fab build-out, edge AI deployment — presented as problem, approach, impact."
+>
+  <div class="container-x py-12 sm:py-16">
+    <h1 class="text-3xl sm:text-4xl font-extrabold">🧩 {t.sections.works}</h1>
+    <p class="mt-2 text-[var(--color-muted)] max-w-2xl">
+      Presented as problem &rarr; approach &rarr; impact. Items marked{" "}
+      <span class="text-[var(--color-accent)]">✏️ TODO</span> still need hard numbers.
+    </p>
+    <div class="mt-8">
+      <WorkGrid locale={locale} works={works} />
+    </div>
+  </div>
+</Base>

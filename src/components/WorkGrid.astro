@@ -1,0 +1,51 @@
+---
+import { type Locale } from "../lib/i18n";
+import type { CollectionEntry } from "astro:content";
+
+const { locale, works } = Astro.props as {
+  locale: Locale;
+  works: CollectionEntry<"works">[];
+};
+---
+
+<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+  {
+    works.map((w) => {
+      const d = w.data;
+      const group = w.id.replace(/-(zh|en)$/, "");
+      return (
+        <a
+          href={`/${locale}/works/${group}/`}
+          class="card p-5 flex flex-col hover:border-[var(--color-brand)] transition-colors group"
+        >
+          <div class="flex items-start justify-between gap-3">
+            <span class="text-2xl" aria-hidden="true">
+              {d.icon}
+            </span>
+            {d.period && (
+              <span class="text-xs tabular-nums text-[var(--color-muted)] shrink-0 text-right">
+                {d.period}
+              </span>
+            )}
+          </div>
+          <h3 class="mt-3 font-bold leading-snug group-hover:text-[var(--color-brand)]">
+            {d.title}
+          </h3>
+          <p class="mt-1.5 text-sm leading-relaxed text-[var(--color-muted)] flex-1">
+            {d.summary}
+          </p>
+          <div class="mt-3 flex flex-wrap gap-1.5">
+            {d.tech.slice(0, 4).map((x) => (
+              <span class="chip text-[11px] py-0.5 px-2">{x}</span>
+            ))}
+            {d.tech.length > 4 && (
+              <span class="chip text-[11px] py-0.5 px-2 text-[var(--color-muted)]">
+                +{d.tech.length - 4}
+              </span>
+            )}
+          </div>
+        </a>
+      );
+    })
+  }
+</div>

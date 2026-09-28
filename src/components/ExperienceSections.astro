@@ -1,0 +1,129 @@
+---
+import { useT, type Locale } from "../lib/i18n";
+import { experience, education, certifications, keywords } from "../data/resume";
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props as Props;
+const t = useT(locale);
+---
+
+<section class="border-b border-[var(--color-line)]">
+  <div class="container-x py-10">
+    <h2 class="section-title">🏷️ Keywords</h2>
+    <div class="flex flex-wrap gap-2">
+      {keywords[locale].map((k) => <span class="chip">{k}</span>)}
+    </div>
+  </div>
+</section>
+
+<section class="border-b border-[var(--color-line)]">
+  <div class="container-x py-12 sm:py-16">
+    <h2 class="section-title">💼 {t.sections.exp}</h2>
+    <ol class="relative">
+      <div class="absolute left-[7px] top-2 bottom-2 w-px bg-[var(--color-line)]" aria-hidden="true" />
+      {
+        experience.map((e) => (
+          <li class="relative pl-9 pb-10 last:pb-0 avoid-break">
+            <span
+              class="absolute left-0 top-1.5 grid h-[15px] w-[15px] place-items-center rounded-full border-2 border-[var(--color-brand)] bg-[var(--color-bg)]"
+              aria-hidden="true"
+            />
+            <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+              <h3 class="font-bold text-lg">{e.company[locale]}</h3>
+              <span class="text-sm tabular-nums text-[var(--color-brand)] font-semibold">
+                {e.period}
+              </span>
+            </div>
+            <p class="mt-0.5 text-[15px] font-semibold text-[var(--color-brand)]">
+              {e.title[locale]}
+            </p>
+            <p class="text-[13px] text-[var(--color-muted)] mt-0.5">
+              {e.dept[locale]} · {e.location[locale]}
+            </p>
+            <ul class="mt-3 space-y-1.5">
+              {e.bullets.map((b) => (
+                <li class="text-sm leading-relaxed flex gap-2">
+                  <span class="text-[var(--color-brand)] shrink-0" aria-hidden="true">
+                    ·
+                  </span>
+                  <span>{b[locale]}</span>
+                </li>
+              ))}
+            </ul>
+            {e.todo.length > 0 && (
+              <p class="mt-3 text-xs text-[var(--color-accent)] flex items-start gap-1.5">
+                <span aria-hidden="true">✏️</span>
+                <span>{e.todo.join(" / ")}</span>
+              </p>
+            )}
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<section class="border-b border-[var(--color-line)]">
+  <div class="container-x py-12 sm:py-16">
+    <h2 class="section-title">🎓 {t.sections.edu}</h2>
+    <div class="grid gap-4">
+      {
+        education.map((e) => (
+          <div class="card p-5 avoid-break">
+            <div class="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+              <h3 class="font-bold">{e.school[locale]}</h3>
+              <span class="text-sm tabular-nums text-[var(--color-muted)]">{e.period}</span>
+            </div>
+            <p class="mt-0.5 text-sm text-[var(--color-brand)] font-semibold">{e.degree[locale]}</p>
+            {e.thesis && (
+              <div class="mt-3 rounded-lg border border-[var(--color-line)] bg-[var(--color-surface)] p-3.5">
+                <p class="text-[11px] font-semibold text-[var(--color-muted)] tracking-wide">
+                  {locale === "zh" ? "碩士論文" : "Master's thesis"}
+                </p>
+                <p class="mt-1 text-sm font-semibold leading-snug">{e.thesis.title[locale]}</p>
+                <p class="mt-1.5 text-xs text-[var(--color-muted)]">
+                  {e.thesis.advisor[locale]} · {e.thesis.committee[locale]}
+                </p>
+                <p class="text-xs text-[var(--color-muted)]">{e.thesis.oral[locale]}</p>
+                <a
+                  href={e.thesis.url}
+                  target="_blank"
+                  rel="noopener"
+                  class="mt-2 inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--color-brand)] link-underline break-all"
+                >
+                  🔗 {e.thesis.url}
+                </a>
+              </div>
+            )}
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<section class="border-b border-[var(--color-line)]">
+  <div class="container-x py-12 sm:py-16">
+    <h2 class="section-title">🏅 {t.sections.cert}</h2>
+    <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        certifications.map((c) => (
+          <div class="card p-4 flex items-start gap-3">
+            <span class="text-xl leading-none mt-0.5" aria-hidden="true">
+              {c.icon}
+            </span>
+            <div class="min-w-0">
+              <p class="font-semibold text-sm leading-snug">{c.name[locale]}</p>
+              <p class="mt-1 text-xs text-[var(--color-muted)]">{c.issuer[locale]}</p>
+              {c.date && (
+                <p class="text-xs text-[var(--color-muted)] tabular-nums">{c.date}</p>
+              )}
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

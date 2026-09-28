@@ -1,0 +1,31 @@
+---
+import { useT, type Locale } from "../lib/i18n";
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props as Props;
+const t = useT(locale);
+---
+
+<section class="border-b border-[var(--color-line)]">
+  <div class="container-x py-12 sm:py-16">
+    <h2 class="section-title">🧭 {t.sections.why}</h2>
+    <div class="grid gap-4 sm:grid-cols-2">
+      {
+        t.why.map((w) => (
+          <div class="card p-5">
+            <div class="flex items-start gap-3">
+              <span class="text-2xl leading-none mt-0.5" aria-hidden="true">
+                {w.icon}
+              </span>
+              <div class="min-w-0">
+                <h3 class="font-bold leading-snug">{w.t}</h3>
+                <p class="mt-1.5 text-sm leading-relaxed text-[var(--color-muted)]">{w.d}</p>
+              </div>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
