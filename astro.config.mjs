@@ -29,7 +29,7 @@ export default defineConfig({
       // 含個人聯絡資訊的列印履歷版（/resume/）與錯誤頁（404）不進 sitemap
       filter: (page) => {
         const p = new URL(page).pathname;
-        if (p === "/" || p === "") return false;
+        if (p === "/" || p === "") return true; // / 現在是正式中文首頁，要進 sitemap
         return !/\/(resume|404)\/?$/.test(p);
       },
     }),

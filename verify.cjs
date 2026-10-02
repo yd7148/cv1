@@ -6,7 +6,7 @@ const OUT = path.join(__dirname, "shots");
 const BASE = process.env.BASE || "http://localhost:4321";
 
 const targets = [
-  { slug: "zh-home", url: "/zh/", full: true },
+  { slug: "zh-home", url: "/", full: true },
   { slug: "en-home", url: "/en/", full: true },
   { slug: "zh-works", url: "/zh/works/", full: false },
   { slug: "zh-work-detail", url: "/zh/works/sic-wafer-yolo/", full: true },
@@ -63,13 +63,13 @@ const targets = [
   // 手機版
   const mctx = await browser.newContext({ viewport: { width: 375, height: 780 }, locale: "zh-TW" });
   const mp = await mctx.newPage();
-  await mp.goto(BASE + "/zh/", { waitUntil: "networkidle" });
+  await mp.goto(BASE + "/", { waitUntil: "networkidle" });
   await mp.waitForTimeout(300);
   await mp.screenshot({ path: path.join(OUT, "zh-home-mobile.png"), fullPage: true, scale: "css" });
   const mOverflow = await mp.evaluate(
     () => document.documentElement.scrollWidth - document.documentElement.clientWidth
   );
-  report.push({ page: "/zh/ (375px)", scheme: "light", hOverflowPx: mOverflow });
+  report.push({ page: "/ (375px)", scheme: "light", hOverflowPx: mOverflow });
   await mctx.close();
 
   // A4 列印 PDF 實測

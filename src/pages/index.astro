@@ -1,4 +1,12 @@
 ---
-// Astro requires a root index; with i18n prefixDefaultLocale it redirects to the default locale.
-return Astro.redirect("/zh/", 302);
+/**
+ * 根路徑 / 直接渲染中文首頁
+ *
+ * 入口網址因此從 https://yd7148.github.io/<repo>/zh/ 變成
+ * https://yd7148.github.io/<repo>/，canonical 也指向這裡。
+ * 內容放在 components/HomePage.astro，與 /zh/ 共用同一份。
+ */
+import HomePage from "../components/HomePage.astro";
 ---
+
+<HomePage />
