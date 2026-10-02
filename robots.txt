@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /cv1/
+
+# 含個人聯絡資訊的列印履歷版 —— 不進搜尋引擎
+Disallow: /cv1/zh/resume/
+Disallow: /cv1/en/resume/
