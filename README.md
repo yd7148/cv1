@@ -3,7 +3,7 @@
 隱私優先的個人檔案網站，作為**應徵時的附件**使用。
 
 - **定位主軸**：SiC 第三代半導體智慧製造與品質管制
-- **線上網址**：`https://yd7148.github.io/yd7148/`（GitHub Pages，免費）
+- **線上網址**：`https://yd7148.github.io/cv1/`（GitHub Pages，免費）
 - **本機預覽**：`http://localhost:4321/`
 - **技術**：Astro 7.3 + Tailwind CSS v4，純靜態、零 JavaScript 套件
 - **建置產出**：22 個頁面，總計約 272 KB
@@ -14,7 +14,7 @@
 
 ```bash
 npm install
-npm run dev        # http://localhost:4321 → 導向 /zh/
+npm run dev        # http://localhost:4321/ （根路徑導向 /zh/）
 npm run build      # 產生 dist/
 npm run check      # TypeScript / Astro 型別檢查
 npm run preview    # 本機預覽正式建置
@@ -22,12 +22,12 @@ npm run preview    # 本機預覽正式建置
 
 ## 部署到 GitHub Pages
 
-線上網址：`https://yd7148.github.io/yd7148/`（免費，專案頁）
+線上網址：`https://yd7148.github.io/cv1/`（免費，專案頁）
 
 目前採用 **`gh-pages` 分支發布**：`dist/` 的產物直接推到那條分支，GitHub 直接拿來當網站。
 
 ```bash
-npm run build        # astro build + scripts/fix-base.mjs（補 /yd7148/ 路徑前綴）
+npm run build        # astro build + scripts/fix-base.mjs（補 /cv1/ 路徑前綴）
 npm run verify:build # 隱私閘關：公開頁有個資就中止
 npm run deploy       # 上面兩步 + 推送 gh-pages（約 30 秒後生效）
 ```
@@ -39,7 +39,7 @@ npm run deploy       # 上面兩步 + 推送 gh-pages（約 30 秒後生效）
 | `npm run build` | 正式建置 + 路徑修補 |
 | `npm run verify:build` | 部署前隱私檢查（公開頁零個資、robots 擋住 `/resume/`） |
 | `npm run deploy` | 建置 → 檢查 → 推 `gh-pages` |
-| `node scripts/smoke-pages.mjs` | 在本機用 `/yd7148/` 的路徑模擬 Pages，跑 11 條路由 |
+| `node scripts/smoke-pages.mjs` | 在本機用 `/cv1/` 的路徑模擬 Pages，跑 11 條路由 |
 | `node scripts/smoke-live.mjs` | 對線上三個站台各跑 11 條路由 |
 | `node verify.cjs` | 截圖 + 溢出 / console / PII 遮罩檢查（需 dev 伺服器在跑） |
 
@@ -47,7 +47,7 @@ npm run deploy       # 上面兩步 + 推送 gh-pages（約 30 秒後生效）
 
 | 檔案 | 問題 |
 |---|---|
-| `fix-base.mjs` | Pages 專案頁在子路徑 `/yd7148/`，所有 `href="/zh/"`、`src="/images/..."` 都缺前綴；建置後統一改寫 `dist` 的 HTML、meta-refresh 與 `robots.txt`。 |
+| `fix-base.mjs` | Pages 專案頁在子路徑 `/cv1/`，所有 `href="/zh/"`、`src="/images/..."` 都缺前綴；建置後統一改寫 `dist` 的 HTML、meta-refresh 與 `robots.txt`。 |
 | `pii.cjs` | 提供「個資探針」給驗證腳本；探針從 `.env` 讀，**本身不含真實值**。 |
 | `verify-build.mjs` | 部署前的隱私閘關。不通過就中止部署。 |
 

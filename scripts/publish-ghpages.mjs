@@ -4,7 +4,18 @@ import path from "node:path";
 import os from "node:os";
 
 const base = "D:/256gbtemp/01-Project/2026-09-CV/04-Pages";
-const repos = process.argv.slice(2);
+// 沒給參數時就推「自己」—— 由 astro.config.mjs 的 REPO 決定，
+// 這樣 npm run deploy 不用記得帶參數。
+const root = path.resolve(".");
+function repoName() {
+  try {
+    const src = fs.readFileSync(path.join(root, "astro.config.mjs"), "utf8");
+    const m = src.match(/export const REPO\s*=\s*["']([^"']+)["']/);
+    if (m) return m[1];
+  } catch {}
+  return path.basename(root);
+}
+const repos = process.argv.length > 2 ? process.argv.slice(2) : [repoName()];
 const tmpRoot = path.join(os.tmpdir(), "ghpages-build");
 fs.mkdirSync(tmpRoot, { recursive: true });
 

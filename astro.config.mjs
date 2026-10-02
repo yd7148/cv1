@@ -3,10 +3,10 @@ import { defineConfig } from "astro/config";
 import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
 
-// GitHub Pages 專案頁：https://yd7148.github.io/yd7148/
+// GitHub Pages 專案頁：https://yd7148.github.io/cv1/
 // base 讓 Astro 自動處理 /_astro/* 與自動產生的路徑；
 // 原始碼裡手寫的絕對路徑（/zh/、/images/*…）由 scripts/fix-base.mjs 在建置後補上。
-export const REPO = "yd7148";
+export const REPO = "cv1";
 export const SITE_URL = "https://yd7148.github.io/" + REPO;
 // dev 保持根路徑（http://localhost:4321/zh/），只有正式建置才加 /<repo>/ 前綴。
 const isProd = process.env.NODE_ENV === "production";

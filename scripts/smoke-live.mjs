@@ -1,9 +1,9 @@
 import { chromium } from "playwright";
 
 const SITES = [
-  ["v1", "https://yd7148.github.io/yd7148/"],
-  ["v2", "https://yd7148.github.io/yd7148-v2/"],
-  ["v3", "https://yd7148.github.io/yd7148-v3/"]
+  ["v1", "https://yd7148.github.io/cv1/"],
+  ["v2", "https://yd7148.github.io/cv2/"],
+  ["v3", "https://yd7148.github.io/cv3/"]
 ];
 
 const ROUTES = ["", "zh/", "en/", "zh/works/", "zh/works/sic-wafer-yolo/", "zh/about/", "zh/notes/edge-vs-cloud/", "zh/contact/", "zh/resume/", "robots.txt", "sitemap-0.xml"];
