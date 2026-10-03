@@ -1,5 +1,5 @@
 ---
-import { useT, altPath, type Locale } from "../lib/i18n";
+import { useT, altPath, stripBase, type Locale } from "../lib/i18n";
 import { identity, experience, education, certifications, keywords } from "../data/resume";
 import { contact } from "../data/contact";
 import Pii from "../components/Pii.astro";
@@ -93,7 +93,7 @@ const other = locale === "zh" ? "en" : "zh";
     <div class="bar noprint">
       <button id="reveal" data-reveal>{t.resume.reveal}</button>
       <button id="doPrint">🖨 {t.resume.print}</button>
-      <a href={altPath(Astro.url.pathname, other)} hreflang={other}
+      <a href={altPath(stripBase(Astro.url.pathname, import.meta.env.BASE_URL), other)} hreflang={other}
         >🌐 {locale === "zh" ? "English" : "繁體中文"}</a
       >
       <a href={`/${locale}/`}>&larr; {t.common.backHome}</a>

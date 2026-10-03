@@ -1,29 +1,39 @@
 ---
-import { useT, altPath } from "../lib/i18n";
+import { useT, altPath, stripBase } from "../lib/i18n";
 
 const { locale } = Astro.props;
 const t = useT(locale);
 const other = locale === "zh" ? "en" : "zh";
 const otherLabel = locale === "zh" ? "EN" : "中文";
-const href = altPath(Astro.url.pathname, other);
+
+// Astro.url.pathname 會含 base 前綴（正式環境為 /cv1/），而 altPath 只認 /zh/、/en/。
+// 不先剝掉 base，根路徑會算出 /en/cv1/ 這種錯誤連結。
+const pathNoBase = stripBase(Astro.url.pathname, import.meta.env.BASE_URL);
+
+// 語言切換：中文首頁的正式位置是 /，/zh/ 只會轉址，所以直接指 / 省一次跳轉。
+let href = altPath(pathNoBase, other);
+if (other === "zh" && href === "/zh/") href = "/";
+
+// 中文首頁在 / ，英文首頁在 /en/；其餘頁面維持 /<locale>/...
+const homeHref = locale === "zh" ? "/" : "/en/";
 
 const links = [
-  { href: `/${locale}/`, label: t.nav.home },
+  { href: homeHref, label: t.nav.home },
   { href: `/${locale}/works/`, label: t.nav.works },
   { href: `/${locale}/notes/`, label: t.nav.notes },
   { href: `/${locale}/resume/`, label: t.nav.resume },
   { href: `/${locale}/contact/`, label: t.nav.contact },
 ];
-const current = Astro.url.pathname;
+const current = pathNoBase;
 const isOn = (l: { href: string }) =>
-  current === l.href || (l.href !== `/${locale}/` && current.startsWith(l.href));
+  current === l.href || (l.href !== homeHref && current.startsWith(l.href));
 ---
 
 <header
   class="print-hide sticky top-0 z-50 border-b border-[var(--color-line)] bg-[color-mix(in_srgb,var(--color-bg)_88%,transparent)] backdrop-blur"
 >
   <div class="container-x flex h-16 items-center justify-between gap-4">
-    <a href={`/${locale}/`} class="flex items-center gap-2.5 font-bold shrink-0">
+    <a href={homeHref} class="flex items-center gap-2.5 font-bold shrink-0">
       <span
         class="grid h-9 w-9 place-items-center rounded-lg bg-[var(--color-brand)] text-[var(--color-brand-fg)] text-sm"
         >Liu</span

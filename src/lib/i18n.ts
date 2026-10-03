@@ -4,6 +4,19 @@ export const LOCALES: Locale[] = ["zh", "en"];
 export const DEFAULT_LOCALE: Locale = "zh";
 export const SITE_URL = "https://yd7148.workers.dev";
 
+/**
+ * 去掉正式環境的 base 前綴。
+ *
+ * Astro.url.pathname 在正式環境會含 base（部署在專案頁時為 /cv1/、/cv2/），
+ * 但 altPath 只認 locale 前綴 /zh/、/en/。根路徑的 pathname 是 /cv1/，
+ * 不先剝掉 base 會算出 /en/cv1/ 這種錯誤連結。
+ */
+export function stripBase(pathname: string, base: string): string {
+  if (base && base !== "/" && pathname.startsWith(base)) {
+    return `/${pathname.slice(base.length)}`;
+  }
+  return pathname;
+}
 /** 對應語言的 pathname，不含前導 / */
 export function altPath(pathname: string, to: Locale): string {
   const clean = pathname.replace(/^\/(zh|en)(\/|$)/, "/");
