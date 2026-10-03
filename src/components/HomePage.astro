@@ -30,18 +30,6 @@ const notes = (await getCollection("notes", (n) => n.data.lang === locale && !n.
   (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime()
 );
 ---
-/**
- * 首頁內容（中文）
- *
- * 原本只放在 src/pages/zh/index.astro，但 i18n.prefixDefaultLocale 讓根路徑 /
- * 只能做 redirect（→ /zh/），入口網址因此是 .../zh/。
- *
- * 現在抽成這個元件，兩個路由共用同一份內容：
- *   - src/pages/index.astro    → 直接渲染（/ 成為正式入口，canonical）
- *   - src/pages/zh/index.astro → redirect 回 /（舊連結不會壞）
- *
- * 中文首頁因此只有一個 canonical URL，原始碼也只有一份。
- */
 <Base
   locale={locale}
   title={`${identity.name.zh} · ${identity.kicker.zh}｜${identity.currentTitle.zh}`}

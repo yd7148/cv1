@@ -1,7 +1,7 @@
 ---
 import { getCollection, render } from "astro:content";
 import Base from "../../../layouts/Base.astro";
-import { useT, altPath } from "../../../lib/i18n";
+import { useT, altPath, stripBase } from "../../../lib/i18n";
 import { identity } from "../../../data/resume";
 
 export async function getStaticPaths() {
@@ -33,7 +33,7 @@ const { Content } = await render(entry);
         {d.tags.map((x) => <span class="chip text-xs">{x}</span>)}
       </div>
       <a
-        href={altPath(Astro.url.pathname, "zh")}
+        href={altPath(stripBase(Astro.url.pathname, import.meta.env.BASE_URL), "zh")}
         hreflang="zh-Hant-TW"
         class="print-hide mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--color-brand)] link-underline"
         >🌐 改用繁體中文閱讀</a
