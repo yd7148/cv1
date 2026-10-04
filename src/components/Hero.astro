@@ -1,5 +1,5 @@
 ---
-import { useT, type Locale } from "../lib/i18n";
+import {  useT, type Locale, lp  } from "../lib/i18n";
 import { identity } from "../data/resume";
 import { contact } from "../data/contact";
 
@@ -56,8 +56,8 @@ const hasPhoto = false; // TODO: 放入 public/photo.jpg 後改為 true
         </p>
 
         <div class="mt-8 flex flex-wrap gap-3">
-          <a href={`/${locale}/resume/`} class="btn btn-primary print-hide">📄 {t.hero.ctaResume}</a>
-          <a href={`/${locale}/contact/`} class="btn print-hide">✉️ {t.hero.ctaContact}</a>
+          <a href={`${lp(locale, "/resume/")}`} class="btn btn-primary print-hide">📄 {t.hero.ctaResume}</a>
+          <a href={`${lp(locale, "/contact/")}`} class="btn print-hide">✉️ {t.hero.ctaContact}</a>
         </div>
 
         <p class="mt-5 text-xs text-[var(--color-muted)] flex items-start gap-1.5">

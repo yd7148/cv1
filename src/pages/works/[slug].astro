@@ -1,8 +1,8 @@
 ---
 import { getCollection, render } from "astro:content";
-import Base from "../../../layouts/Base.astro";
-import { useT, altPath, stripBase } from "../../../lib/i18n";
-import { identity } from "../../../data/resume";
+import Base from "../../layouts/Base.astro";
+import { useT, altPath, lp, stripBase } from "../../lib/i18n";
+import { identity } from "../../data/resume";
 
 export async function getStaticPaths() {
   const all = await getCollection("works", (w) => w.data.lang === "zh");
@@ -22,13 +22,13 @@ const all = (await getCollection("works", (w) => w.data.lang === locale)).sort(
 const idx = all.findIndex((w) => w.id === entry.id);
 const prev = idx > 0 ? all[idx - 1] : undefined;
 const next = idx >= 0 && idx < all.length - 1 ? all[idx + 1] : undefined;
-const href = (e: typeof prev) => (e ? `/${locale}/works/${e.id.replace(/-(zh|en)$/, "")}/` : "");
+const href = (e: typeof prev) => (e ? `${lp(locale, `/works/${e.id.replace(/-(zh|en)$/, "")}/`)}` : "");
 ---
 
 <Base locale={locale} title={`${d.title}｜${identity.name.zh}`} description={d.summary}>
   <article class="container-x py-12 sm:py-16">
     <a
-      href={`/${locale}/works/`}
+      href={`${lp(locale, "/works/")}`}
       class="text-sm text-[var(--color-muted)] hover:text-[var(--color-brand)] print-hide"
       >&larr; {t.nav.works}</a
     >

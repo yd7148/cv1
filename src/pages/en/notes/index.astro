@@ -1,7 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import Base from "../../../layouts/Base.astro";
-import { useT } from "../../../lib/i18n";
+import {  useT, lp  } from "../../../lib/i18n";
 import { identity } from "../../../data/resume";
 
 const locale = "en" as const;
@@ -23,7 +23,7 @@ const all = (await getCollection("notes", (n) => n.data.lang === locale && !n.da
       {
         all.map((n) => (
           <a
-            href={`/${locale}/notes/${n.id.replace(/-(zh|en)$/, "")}/`}
+            href={`${lp(locale, `/notes/${n.id.replace(/-(zh|en)$/, "")}/`)}`}
             class="card p-5 block hover:border-[var(--color-brand)] transition-colors"
           >
             <div class="flex flex-wrap items-baseline justify-between gap-2">

@@ -1,9 +1,0 @@
----
-/**
- * /zh/ 保留給舊連結，導回新的入口網址 /。
- *
- * 這樣中文首頁只有一個 canonical URL（/），不會有 / 與 /zh/ 內容重複的 SEO 問題。
- * 站台內部連結仍使用 /zh/...，那些頁面（works、resume、about…）本身沒有搬家。
- */
-return Astro.redirect("/", 302);
----

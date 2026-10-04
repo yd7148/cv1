@@ -5,11 +5,24 @@ export const DEFAULT_LOCALE: Locale = "zh";
 export const SITE_URL = "https://yd7148.workers.dev";
 
 /**
- * 去掉正式環境的 base 前綴。
+ * 產生站內路徑。中文（預設語言）直接用根路徑，只有英文帶 /en/ 前綴。
  *
- * Astro.url.pathname 在正式環境會含 base（部署在專案頁時為 /cv1/、/cv2/），
- * 但 altPath 只認 locale 前綴 /zh/、/en/。根路徑的 pathname 是 /cv1/，
- * 不先剝掉 base 會算出 /en/cv1/ 這種錯誤連結。
+ *   lp("zh", "/works/") => "/works/"
+ *   lp("en", "/works/") => "/en/works/"
+ *   lp("zh")            => "/"
+ *   lp("en")            => "/en/"
+ */
+export function lp(locale: Locale, path = "/"): string {
+  const clean = path === "/" || path === "" ? "/" : path.startsWith("/") ? path : `/${path}`;
+  if (locale === DEFAULT_LOCALE) return clean;
+  return clean === "/" ? "/en/" : `/en${clean}`;
+}
+
+/**
+ * 去掉正式環境的 base 前綴（部署在專案頁時為 /cv1/、/cv2/）。
+ *
+ * Astro.url.pathname 在正式環境會含 base，但 altPath 只認 /en/ 前綴；
+ * 根路徑的 pathname 是 /cv1/，不先剝掉 base 會算出 /en/cv1/ 這種錯誤連結。
  */
 export function stripBase(pathname: string, base: string): string {
   if (base && base !== "/" && pathname.startsWith(base)) {
@@ -17,11 +30,12 @@ export function stripBase(pathname: string, base: string): string {
   }
   return pathname;
 }
-/** 對應語言的 pathname，不含前導 / */
+
+/** 對應語言的 pathname。中文在根路徑，英文加 /en/ 前綴。 */
 export function altPath(pathname: string, to: Locale): string {
+  // 先剝掉既有的語系前綴，避免 /en/en/ 這種疊加
   const clean = pathname.replace(/^\/(zh|en)(\/|$)/, "/");
-  const rest = clean === "/" || clean === "" ? "/" : clean;
-  return `/${to}${rest === "/" ? "/" : rest}`;
+  return lp(to, clean === "" ? "/" : clean);
 }
 
 export const t = {

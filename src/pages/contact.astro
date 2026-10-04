@@ -1,7 +1,7 @@
 ---
-import Base from "../../layouts/Base.astro";
-import { useT } from "../../lib/i18n";
-import { identity } from "../../data/resume";
+import Base from "../layouts/Base.astro";
+import {  useT, lp  } from "../lib/i18n";
+import { identity } from "../data/resume";
 
 const locale = "zh" as const;
 const t = useT(locale);
@@ -84,7 +84,7 @@ const WEB3FORMS_KEY = "TODO_WEB3FORMS_ACCESS_KEY";
     <div class="mt-8 p-4 rounded-xl border border-[var(--color-line)] bg-[var(--color-surface)] text-sm">
       <p class="font-semibold">📄 想要履歷 PDF？</p>
       <p class="mt-1.5 text-[var(--color-muted)]">
-        直接到 <a href={`/${locale}/resume/`} class="text-[var(--color-brand)] link-underline">A4 列印版</a>
+        直接到 <a href={`${lp(locale, "/resume/")}`} class="text-[var(--color-brand)] link-underline">A4 列印版</a>
         按「列印 / 存成 PDF」即可取得。
       </p>
     </div>

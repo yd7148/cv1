@@ -1,5 +1,5 @@
 ---
-import { type Locale } from "../lib/i18n";
+import {  type Locale, lp  } from "../lib/i18n";
 import type { CollectionEntry } from "astro:content";
 
 const { locale, works } = Astro.props as {
@@ -15,7 +15,7 @@ const { locale, works } = Astro.props as {
       const group = w.id.replace(/-(zh|en)$/, "");
       return (
         <a
-          href={`/${locale}/works/${group}/`}
+          href={`${lp(locale, `/works/${group}/`)}`}
           class="card p-5 flex flex-col hover:border-[var(--color-brand)] transition-colors group"
         >
           <div class="flex items-start justify-between gap-3">

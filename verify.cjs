@@ -8,13 +8,13 @@ const BASE = process.env.BASE || "http://localhost:4321";
 const targets = [
   { slug: "zh-home", url: "/", full: true },
   { slug: "en-home", url: "/en/", full: true },
-  { slug: "zh-works", url: "/zh/works/", full: false },
-  { slug: "zh-work-detail", url: "/zh/works/sic-wafer-yolo/", full: true },
-  { slug: "zh-resume", url: "/zh/resume/", full: true },
-  { slug: "zh-about", url: "/zh/about/", full: false },
-  { slug: "zh-notes", url: "/zh/notes/", full: false },
-  { slug: "zh-note-detail", url: "/zh/notes/edge-vs-cloud/", full: false },
-  { slug: "zh-contact", url: "/zh/contact/", full: false },
+  { slug: "zh-works", url: "/works/", full: false },
+  { slug: "zh-work-detail", url: "/works/sic-wafer-yolo/", full: true },
+  { slug: "zh-resume", url: "/resume/", full: true },
+  { slug: "zh-about", url: "/about/", full: false },
+  { slug: "zh-notes", url: "/notes/", full: false },
+  { slug: "zh-note-detail", url: "/notes/edge-vs-cloud/", full: false },
+  { slug: "zh-contact", url: "/contact/", full: false },
 ];
 
 (async () => {
@@ -75,7 +75,7 @@ const targets = [
   // A4 列印 PDF 實測
   const pctx = await browser.newContext({ viewport: { width: 1280, height: 900 } });
   const pp = await pctx.newPage();
-  await pp.goto(BASE + "/zh/resume/", { waitUntil: "networkidle" });
+  await pp.goto(BASE + "/resume/", { waitUntil: "networkidle" });
   await pp.pdf({
     path: path.join(OUT, "resume-A4.pdf"),
     format: "A4",
@@ -86,7 +86,7 @@ const targets = [
   // 列印時個資是否解除
   const vctx = await browser.newContext({ viewport: { width: 1280, height: 900 } });
   const vp = await vctx.newPage();
-  await vp.goto(BASE + "/zh/resume/", { waitUntil: "networkidle" });
+  await vp.goto(BASE + "/resume/", { waitUntil: "networkidle" });
   const before = await vp.evaluate(() => {
     const el = document.querySelector("[data-pii]");
     return getComputedStyle(el).color;

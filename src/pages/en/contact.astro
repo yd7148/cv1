@@ -1,6 +1,6 @@
 ---
 import Base from "../../layouts/Base.astro";
-import { useT } from "../../lib/i18n";
+import {  useT, lp  } from "../../lib/i18n";
 import { identity } from "../../data/resume";
 
 const locale = "en" as const;
@@ -81,7 +81,7 @@ const WEB3FORMS_KEY = "TODO_WEB3FORMS_ACCESS_KEY";
       <p class="font-semibold">📄 Need a PDF CV?</p>
       <p class="mt-1.5 text-[var(--color-muted)]">
         Open the <a
-          href={`/${locale}/resume/`}
+          href={`${lp(locale, "/resume/")}`}
           class="text-[var(--color-brand)] link-underline">printable résumé</a
         > and hit "Print / Save as PDF".
       </p>

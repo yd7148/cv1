@@ -1,8 +1,8 @@
 ---
 import { getCollection, render } from "astro:content";
-import Base from "../../../layouts/Base.astro";
-import { useT, altPath, stripBase } from "../../../lib/i18n";
-import { identity } from "../../../data/resume";
+import Base from "../../layouts/Base.astro";
+import { useT, altPath, lp, stripBase } from "../../lib/i18n";
+import { identity } from "../../data/resume";
 
 export async function getStaticPaths() {
   const all = await getCollection("notes", (n) => n.data.lang === "zh" && !n.data.draft);
@@ -19,7 +19,7 @@ const { Content } = await render(entry);
 <Base locale={locale} title={`${d.title}｜${identity.name.zh}`} description={d.description}>
   <article class="container-x py-12 sm:py-16 max-w-3xl">
     <a
-      href={`/${locale}/notes/`}
+      href={`${lp(locale, "/notes/")}`}
       class="text-sm text-[var(--color-muted)] hover:text-[var(--color-brand)] print-hide"
       >&larr; {t.nav.notes}</a
     >
