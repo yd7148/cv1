@@ -38,7 +38,7 @@ export const contact = {
     zh: "桃園市龜山區文明路 15 號",
     en: "No. 15, Wuming Rd., Guishan Dist., Taoyuan, Taiwan",
   },
-  city: { zh: "桃園市龜山區", en: "Guishan, Taoyuan" },
+  city: { zh: "桃園龜山", en: "Guishan, Taoyuan" },
   links: {
     github: "TODO",
     youtube: "TODO",
