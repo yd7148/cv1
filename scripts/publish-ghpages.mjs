@@ -3,7 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 import os from "node:os";
 
-const base = "D:/256gbtemp/01-Project/2026-09-CV/04-Pages";
+const base = "D:/01-Project/2026-09-CV/14-Pages";
 // 沒給參數時就推「自己」—— 由 astro.config.mjs 的 REPO 決定，
 // 這樣 npm run deploy 不用記得帶參數。
 const root = path.resolve(".");

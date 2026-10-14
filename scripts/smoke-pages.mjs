@@ -47,16 +47,19 @@ const server = http.createServer((req, res) => {
 await new Promise((r) => server.listen(PORT, r));
 const origin = `http://localhost:${PORT}${base}`;
 
+// 注意：cv1 用 lp()，**中文頁在根路徑、沒有 /zh/ 前綴**（見 src/lib/i18n.ts）。
+// cv3 才用 prefixDefaultLocale（中文在 /zh/）。三站的 smoke-pages.mjs 不可直接互相複製。
 const PAGES = [
   ["根頁", ""],
-  ["中文首頁", "zh/"],
+  ["中文首頁(=根頁)", ""],
   ["英文首頁", "en/"],
-  ["作品集", "zh/works/"],
-  ["專案詳情", "zh/works/sic-wafer-yolo/"],
-  ["學歷頁", "zh/about/"],
-  ["技術筆記", "zh/notes/edge-vs-cloud/"],
-  ["聯絡表單", "zh/contact/"],
-  ["A4 履歷", "zh/resume/"],
+  ["作品集", "works/"],
+  ["專案詳情", "works/sic-wafer-yolo/"],
+  ["學歷頁", "about/"],
+  ["技術筆記", "notes/edge-vs-cloud/"],
+  ["聯絡表單", "contact/"],
+  ["A4 履歷", "resume/"],
+  ["英文作品集", "en/works/"],
   ["robots.txt", "robots.txt"],
   ["sitemap", "sitemap-0.xml"]
 ];
@@ -94,7 +97,7 @@ for (const [label, p] of PAGES) {
 
 // 首頁上的內部連結能不能點
 bad.length = 0;
-await page.goto(origin + "zh/", { waitUntil: "networkidle" });
+await page.goto(origin, { waitUntil: "networkidle" });
 await page.waitForTimeout(600);
 const linkCheck = await page.evaluate(() => {
   const out = [];
